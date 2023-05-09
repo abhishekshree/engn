@@ -5,7 +5,7 @@ enum OrderType {
     Ask,
 }
 
-#[derive(Hash, Eq, PartialEq, Debug)]
+#[derive(Hash, Eq, PartialEq, Debug, Clone, Copy)]
 struct Price {
     integer: u64,
     fraction: u64,
@@ -96,7 +96,7 @@ impl OrderBook {
                     Some(limit) => {
                         // println!("limit: {:?} already got a limit", limit);
                         limit.add_order(order);
-                    }
+                    },
                     None => {
                         let mut limit = Limit::new(price);
                         limit.add_order(order);
