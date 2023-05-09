@@ -25,7 +25,7 @@ impl Price {
     }
 }
 #[derive(Debug)]
-pub struct Limit {  
+pub struct Limit {
     // price: f64, f64 bad because of inconsistent hashing
     price: Price,
     orders: Vec<Order>,
@@ -51,10 +51,7 @@ pub struct Order {
 
 impl Order {
     pub fn new(size: f64, order_type: OrderType) -> Order {
-        Order {
-            size,
-            order_type,
-        }
+        Order { size, order_type }
     }
 }
 
@@ -76,35 +73,34 @@ impl OrderBook {
         match order.order_type {
             OrderType::Bid => {
                 let price = Price::new(price);
-                
+
                 match self.bids.get_mut(&price) {
-                    Some(limit) =>{
+                    Some(limit) => {
                         // println!("limit: {:?} already got a limit", limit);
                         limit.add_order(order);
-                    },
+                    }
                     None => {
                         let mut limit = Limit::new(price);
                         limit.add_order(order);
                         self.bids.insert(price, limit);
                     }
                 }
-
-            },
+            }
             OrderType::Ask => {
                 let price = Price::new(price);
-                
+
                 match self.asks.get_mut(&price) {
                     Some(limit) => {
                         // println!("limit: {:?} already got a limit", limit);
                         limit.add_order(order);
-                    },
+                    }
                     None => {
                         let mut limit = Limit::new(price);
                         limit.add_order(order);
                         self.asks.insert(price, limit);
                     }
                 }
-            },
+            }
         }
     }
 }
