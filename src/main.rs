@@ -1,9 +1,11 @@
+use std::collections::HashMap;
+
 enum OrderType {
     Bid,
     Ask,
 }
 
-#[derive(Eq, PartialEq, Debug)]
+#[derive(Hash, Eq, PartialEq, Debug)]
 struct Price {
     integer: u64,
     fraction: u64,
@@ -29,6 +31,19 @@ struct Limit {
     orders: Vec<Order>,
 }
 
+impl Limit {
+    fn new(price: Price) -> Limit {
+        Limit {
+            price: price,
+            orders: Vec::new(),
+        }
+    }
+
+    fn add_order(&mut self, order: Order) {
+        self.orders.push(order);
+    }
+}
+
 struct Order {
     size: f64,
     order_type: OrderType,
@@ -39,6 +54,56 @@ impl Order {
         Order {
             size,
             order_type,
+        }
+    }
+}
+
+struct OrderBook {
+    asks: HashMap<Price, Limit>,
+    bids: HashMap<Price, Limit>,
+}
+
+impl OrderBook {
+    fn new() -> OrderBook {
+        OrderBook {
+            asks: HashMap::new(),
+            bids: HashMap::new(),
+        }
+    }
+
+    fn add_order(&mut self, price: f64, order: Order) {
+        match order.order_type {
+            OrderType::Bid => {
+                let price = Price::new(price);
+                
+                match self.bids.get_mut(&price) {
+                    Some(limit) =>{
+                        // println!("limit: {:?} already got a limit", limit);
+                        limit.add_order(order);
+                    },
+                    None => {
+                        let mut limit = Limit::new(price);
+                        limit.add_order(order);
+                        self.bids.insert(price, limit);
+                    }
+                }
+
+            },
+            OrderType::Ask => {
+                let price = Price::new(price);
+                
+                match self.asks.get_mut(&price) {
+                    Some(limit) => {
+                        // println!("limit: {:?} already got a limit", limit);
+                        limit.add_order(order);
+                    }
+                    None => {
+                        let mut limit = Limit::new(price);
+                        limit.add_order(order);
+                        self.asks.insert(price, limit);
+                    }
+                }
+            },
         }
     }
 }
