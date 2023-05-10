@@ -1,3 +1,5 @@
+#[allow(dead_code)]
+
 mod engine;
 
 use engine::orderbook::{Order, OrderBook, OrderType};
@@ -17,6 +19,4 @@ fn main() {
     order_book.add_order(20.0, sell_order_from_alice);
 
     print!("{:?}", order_book);
-
-    // let eng = MatchingEngine::new();
 }
