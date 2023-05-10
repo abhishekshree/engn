@@ -1,5 +1,4 @@
 #[allow(dead_code)]
-
 use std::collections::HashMap;
 #[derive(Debug)]
 pub enum OrderType {
@@ -28,12 +27,10 @@ impl Price {
 
     pub fn cmp(&self, other: &Price) -> std::cmp::Ordering {
         match self.integer.cmp(&other.integer) {
-            std::cmp::Ordering::Equal => {
-                match self.fraction.cmp(&other.fraction) {
-                    std::cmp::Ordering::Equal => std::cmp::Ordering::Equal,
-                    std::cmp::Ordering::Greater => std::cmp::Ordering::Greater,
-                    std::cmp::Ordering::Less => std::cmp::Ordering::Less,
-                }
+            std::cmp::Ordering::Equal => match self.fraction.cmp(&other.fraction) {
+                std::cmp::Ordering::Equal => std::cmp::Ordering::Equal,
+                std::cmp::Ordering::Greater => std::cmp::Ordering::Greater,
+                std::cmp::Ordering::Less => std::cmp::Ordering::Less,
             },
             std::cmp::Ordering::Greater => std::cmp::Ordering::Greater,
             std::cmp::Ordering::Less => std::cmp::Ordering::Less,
@@ -76,7 +73,6 @@ impl Limit {
     pub fn add_order(&mut self, order: Order) {
         self.orders.push(order);
     }
-
 
     pub fn fill_order(&mut self, market_order: &mut Order) {
         for limit_order in self.orders.iter_mut() {
@@ -167,7 +163,7 @@ impl OrderBook {
         limits.sort_by(|a, b| a.price.cmp(&b.price));
         limits
     }
-    
+
     pub fn bid_limits(&mut self) -> Vec<&mut Limit> {
         let mut limits: Vec<&mut Limit> = self.bids.values_mut().collect::<Vec<&mut Limit>>();
         limits.sort_by(|a, b| b.price.cmp(&a.price));

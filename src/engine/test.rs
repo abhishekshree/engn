@@ -60,4 +60,3 @@ fn fill_market_order_ask() {
 
     assert_eq!(market_order.is_filled(), true);
 }
-

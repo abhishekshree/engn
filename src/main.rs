@@ -1,5 +1,4 @@
 #[allow(dead_code)]
-
 mod engine;
 
 use engine::orderbook::{Order, OrderBook, OrderType};
